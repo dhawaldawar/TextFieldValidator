@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>16F95ED0-8451-4514-A5FB-B71ED1FF2499</string>
+	<string>055C478A-F8E4-4C88-812D-C369B3E983DA</string>
 	<key>IDESourceControlProjectName</key>
 	<string>TextFieldValidationDemo</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>D3169203-2ECA-471E-B061-7B1B06B5374B</key>
-		<string>https://github.com/dhawaldawar/TextFieldValidator.git</string>
+		<key>E10113C0-3988-46DF-9CF9-28C2CBD1200C</key>
+		<string>https://github.com/tschleuss/TextFieldValidator.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>TextFieldValidationDemo/TextFieldValidationDemo.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>D3169203-2ECA-471E-B061-7B1B06B5374B</key>
+		<key>E10113C0-3988-46DF-9CF9-28C2CBD1200C</key>
 		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/dhawaldawar/TextFieldValidator.git</string>
+	<string>https://github.com/tschleuss/TextFieldValidator.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>D3169203-2ECA-471E-B061-7B1B06B5374B</string>
+	<string>E10113C0-3988-46DF-9CF9-28C2CBD1200C</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>D3169203-2ECA-471E-B061-7B1B06B5374B</string>
+			<string>E10113C0-3988-46DF-9CF9-28C2CBD1200C</string>
 			<key>IDESourceControlWCCName</key>
 			<string>TextFieldValidator</string>
 		</dict>
