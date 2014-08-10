@@ -429,7 +429,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TextFieldValidationDemo/Supporting Files/TextFieldValidationDemo-Prefix.pch";
 				INFOPLIST_FILE = "TextFieldValidationDemo/Supporting Files/TextFieldValidationDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -443,7 +442,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "TextFieldValidationDemo/Supporting Files/TextFieldValidationDemo-Prefix.pch";
 				INFOPLIST_FILE = "TextFieldValidationDemo/Supporting Files/TextFieldValidationDemo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
