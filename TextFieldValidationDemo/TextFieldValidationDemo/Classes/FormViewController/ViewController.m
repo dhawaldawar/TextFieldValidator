@@ -17,13 +17,18 @@
 #define REGEX_PASSWORD @"[A-Za-z0-9]{6,20}"
 #define REGEX_PHONE_DEFAULT @"[0-9]{3}\\-[0-9]{3}\\-[0-9]{4}"
 
-@interface ViewController (){
+@interface ViewController ()<UITextFieldDelegate>{
     IBOutlet TextFieldValidator *txtUserName;
     IBOutlet TextFieldValidator *txtEmail;
     IBOutlet TextFieldValidator *txtPassword;
     IBOutlet TextFieldValidator *txtConfirmPass;
     IBOutlet TextFieldValidator *txtPhone;
+    TextFieldValidator *txtDemo;
+    
     SecondViewController *secondViewController;
+    
+    IBOutlet UIView *viewContainer;
+    IBOutlet UIScrollView *scrlView;
 }
 - (IBAction)btnSubmit:(id)sender;
 
@@ -36,6 +41,14 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     [self setupAlerts];
+    
+    txtDemo=[[TextFieldValidator alloc] initWithFrame:CGRectMake(20, 200, 280, 30)];
+    txtDemo.borderStyle=UITextBorderStyleRoundedRect;
+    txtDemo.placeholder=@"Programmatically created - Email";
+    txtDemo.delegate=self;
+    txtDemo.presentInView=self.view;
+    [viewContainer addSubview:txtDemo];
+    [txtDemo addRegx:REGEX_EMAIL withMsg:@"Enter valid email."];
 }
 
 -(void)setupAlerts{
@@ -61,13 +74,19 @@
 }
 
 - (IBAction)btnSubmit:(id)sender {
-    if([txtUserName validate] & [txtEmail validate] & [txtPassword validate] & [txtConfirmPass validate] & [txtPhone validate]){
+    if([txtUserName validate] & [txtEmail validate] & [txtPassword validate] & [txtConfirmPass validate] & [txtPhone validate] & [txtDemo validate]){
         secondViewController=[[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"SecondViewController"];
         [self.navigationController pushViewController:secondViewController animated:YES];
     }
 }
 
 #pragma mark - UITextFieldDelegate
+- (void)textFieldDidBeginEditing:(UITextField *)textField{
+    if(txtDemo==textField){
+        [scrlView setContentOffset:CGPointMake(0, 50) animated:YES];
+    }
+}
+
 - (BOOL)textFieldShouldReturn:(UITextField *)textField{
     [textField resignFirstResponder];
     return YES;

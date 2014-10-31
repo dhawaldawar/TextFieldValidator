@@ -170,13 +170,23 @@
 - (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        
+        [self setup];    
     }
     return self;
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder{
     self=[super initWithCoder:aDecoder];
+    [self setup];
+    return self;
+}
+
+-(void)setDelegate:(id<UITextFieldDelegate>)deleg{
+    supportObj.delegate=deleg;
+    super.delegate=supportObj;
+}
+
+-(void)setup{
     arrRegx=[[NSMutableArray alloc] init];
     validateOnCharacterChanged=YES;
     isMandatory=YES;
@@ -188,12 +198,6 @@
     supportObj.validateOnResign=validateOnResign;
     NSNotificationCenter *notify=[NSNotificationCenter defaultCenter];
     [notify addObserver:self selector:@selector(didHideKeyboard) name:UIKeyboardWillHideNotification object:nil];
-    return self;
-}
-
--(void)setDelegate:(id<UITextFieldDelegate>)deleg{
-    supportObj.delegate=deleg;
-    super.delegate=supportObj;
 }
 
 -(void)setValidateOnCharacterChanged:(BOOL)validate{

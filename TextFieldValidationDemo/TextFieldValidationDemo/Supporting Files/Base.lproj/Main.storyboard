@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5053" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="rZk-7X-ofL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="rZk-7X-ofL">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -155,11 +155,13 @@
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
+                        <outlet property="scrlView" destination="zup-zi-OUz" id="yDD-Cu-SdG"/>
                         <outlet property="txtConfirmPass" destination="vSb-cV-173" id="2gx-dK-uxI"/>
                         <outlet property="txtEmail" destination="7La-oR-TTM" id="2P1-kP-tQV"/>
                         <outlet property="txtPassword" destination="MRb-R6-7Zi" id="iCc-7q-O84"/>
                         <outlet property="txtPhone" destination="AyJ-sl-5Qe" id="GsT-ei-bxa"/>
                         <outlet property="txtUserName" destination="Yy8-2U-7Fg" id="3oU-sT-JMk"/>
+                        <outlet property="viewContainer" destination="VKa-Q3-xVx" id="Jgl-V2-pMb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
