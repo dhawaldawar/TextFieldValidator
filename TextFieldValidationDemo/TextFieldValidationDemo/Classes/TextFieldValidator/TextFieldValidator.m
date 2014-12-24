@@ -46,8 +46,23 @@
     [img.superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[img(%f)]",imgframe.origin.y,imgframe.size.height] options:NSLayoutFormatDirectionLeadingToTrailing  metrics:nil views:dict]];
     
     UIFont *font=[UIFont fontWithName:FontName size:FontSize];
-    CGSize size=[self.strMsg boundingRectWithSize:CGSizeMake(fieldFrame.size.width-(PaddingInErrorPopUp*2), 1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:font} context:nil].size;
-    size=CGSizeMake(ceilf(size.width), ceilf(size.height));
+    
+    CGSize size;
+    CGSize maxSize = CGSizeMake(fieldFrame.size.width-(PaddingInErrorPopUp*2), 1000);
+    
+    if ([self.strMsg respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)])
+    {
+        size = [self.strMsg boundingRectWithSize:maxSize
+                                         options:NSStringDrawingUsesLineFragmentOrigin
+                                      attributes:@{NSFontAttributeName:font}
+                                         context:nil].size;
+    }
+    else
+    {
+        size = [self.strMsg sizeWithFont:font constrainedToSize:maxSize lineBreakMode: NSLineBreakByWordWrapping];
+    }
+    
+    size = CGSizeMake(ceilf(size.width), ceilf(size.height));
     
     UIView *view=[[UIView alloc] initWithFrame:CGRectZero];
     [self insertSubview:view belowSubview:img];
