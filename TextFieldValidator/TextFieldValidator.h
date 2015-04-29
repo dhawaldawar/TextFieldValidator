@@ -61,6 +61,9 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface TextFieldValidator : UITextField<UITextFi
 
 @property (nonatomic,assign) BOOL validateOnResign; /**< Default is YES, Use it whether you want to validate text on resign or not.*/
 
+/** Used from trimming the text before running the validation. Default is YES */
+@property (nonatomic) BOOL trimBeforeValidate;
+
 /**
     Use to add regex for validating textfield text, you need to specify all your regex in queue that you want to validate and their messages respectively that will show when any regex validation will fail.
     @param strRegx Regex string

@@ -181,6 +181,7 @@
     validateOnCharacterChanged=YES;
     isMandatory=YES;
     validateOnResign=YES;
+    _trimBeforeValidate = YES;
     popUpColor=ColorPopUpBg;
     strLengthValidationMsg=[MsgValidateLength copy];
     supportObj=[[TextFieldValidatorSupport alloc] init];
@@ -230,6 +231,9 @@
 }
 
 -(BOOL)validate{
+    if (self.trimBeforeValidate) {
+        self.text = [self.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    }
     if(isMandatory){
         if([self.text length]==0){
             [self showErrorIconForMsg:strLengthValidationMsg];
