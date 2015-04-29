@@ -53,7 +53,7 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface TextFieldValidator : UITextField<UITextFi
 
 @property (nonatomic,assign) BOOL isMandatory;   /**< Default is YES*/
 
-@property (nonatomic,retain) IBOutlet UIView *presentInView;    /**< Assign view on which you want to show popup and it would be good if you provide controller's view*/
+@property (nonatomic,weak) UIView *presentInView;    /**< Assign view on which you want to show popup and it would be good if you provide controller's view. If no view is assigned it will automatically assign the superview that containts this TextFieldValidator. */
 
 @property (nonatomic,retain) UIColor *popUpColor;   /**< Assign popup background color, you can also assign default popup color from macro "ColorPopUpBg" at the top*/
 
