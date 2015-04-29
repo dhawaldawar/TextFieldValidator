@@ -94,6 +94,9 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface TextFieldValidator : UITextField<UITextFi
  */
 -(BOOL)validate;
 
+/** Checks if the text is valid without showing error message */
+- (BOOL)isValid;
+
 /**
     Use to dismiss error popup.
  */

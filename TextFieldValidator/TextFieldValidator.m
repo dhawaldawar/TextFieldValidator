@@ -231,30 +231,12 @@
 }
 
 -(BOOL)validate{
-    if (self.trimBeforeValidate) {
-        self.text = [self.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    }
-    if(isMandatory){
-        if([self.text length]==0){
-            [self showErrorIconForMsg:strLengthValidationMsg];
-            return NO;
-        }
-    }
-    for (int i=0; i<[arrRegx count]; i++) {
-        NSDictionary *dic=[arrRegx objectAtIndex:i];
-        if([dic objectForKey:@"confirm"]){
-            TextFieldValidator *txtConfirm=[dic objectForKey:@"confirm"];
-            if(![txtConfirm.text isEqualToString:self.text]){
-                [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
-                return NO;
-            }
-        }else if(![[dic objectForKey:@"regx"] isEqualToString:@""] && [self.text length]!=0 && ![self validateString:self.text withRegex:[dic objectForKey:@"regx"]]){
-            [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
-            return NO;
-        }
-    }
-    self.rightView=nil;
-    return YES;
+    return [self validateShowingErrorMessage:YES];
+}
+
+- (BOOL)isValid
+{
+    return [self validateShowingErrorMessage:NO];
 }
 
 -(void)dismissPopup{
@@ -274,6 +256,42 @@
 - (BOOL)validateString:(NSString*)stringToSearch withRegex:(NSString*)regexString {
     NSPredicate *regex = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regexString];
     return [regex evaluateWithObject:stringToSearch];
+}
+
+- (BOOL)validateShowingErrorMessage:(BOOL)showErrorMessage
+{
+    if (self.trimBeforeValidate) {
+        self.text = [self.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    }
+    if(isMandatory){
+        if([self.text length]==0){
+            if (showErrorMessage) {
+                [self showErrorIconForMsg:strLengthValidationMsg];
+            }
+            return NO;
+        }
+    }
+    for (int i=0; i<[arrRegx count]; i++) {
+        NSDictionary *dic=[arrRegx objectAtIndex:i];
+        if([dic objectForKey:@"confirm"]){
+            TextFieldValidator *txtConfirm=[dic objectForKey:@"confirm"];
+            if(![txtConfirm.text isEqualToString:self.text]){
+                if (showErrorMessage) {
+                    [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
+                }
+                return NO;
+            }
+        }else if(![[dic objectForKey:@"regx"] isEqualToString:@""] && [self.text length]!=0 && ![self validateString:self.text withRegex:[dic objectForKey:@"regx"]]){
+            if (showErrorMessage) {
+                [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
+            }
+            return NO;
+        }
+    }
+    if (showErrorMessage) {
+        self.rightView=nil;
+    }
+    return YES;
 }
 
 -(void)showErrorIconForMsg:(NSString *)msg{
