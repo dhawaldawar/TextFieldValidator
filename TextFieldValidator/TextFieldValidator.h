@@ -53,13 +53,16 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface TextFieldValidator : UITextField<UITextFi
 
 @property (nonatomic,assign) BOOL isMandatory;   /**< Default is YES*/
 
-@property (nonatomic,retain) IBOutlet UIView *presentInView;    /**< Assign view on which you want to show popup and it would be good if you provide controller's view*/
+@property (nonatomic,weak) UIView *presentInView;    /**< Assign view on which you want to show popup and it would be good if you provide controller's view. If no view is assigned it will automatically assign the superview that containts this TextFieldValidator. */
 
 @property (nonatomic,retain) UIColor *popUpColor;   /**< Assign popup background color, you can also assign default popup color from macro "ColorPopUpBg" at the top*/
 
 @property (nonatomic,assign) BOOL validateOnCharacterChanged; /**< Default is YES, Use it whether you want to validate text on character change or not.*/
 
 @property (nonatomic,assign) BOOL validateOnResign; /**< Default is YES, Use it whether you want to validate text on resign or not.*/
+
+/** Used from trimming the text before running the validation. Default is YES */
+@property (nonatomic) BOOL trimBeforeValidate;
 
 /**
     Use to add regex for validating textfield text, you need to specify all your regex in queue that you want to validate and their messages respectively that will show when any regex validation will fail.
@@ -90,6 +93,9 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface TextFieldValidator : UITextField<UITextFi
     }
  */
 -(BOOL)validate;
+
+/** Checks if the text is valid without showing error message */
+- (BOOL)isValid;
 
 /**
     Use to dismiss error popup.

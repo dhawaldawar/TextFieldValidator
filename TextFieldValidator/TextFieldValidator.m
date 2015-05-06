@@ -23,32 +23,32 @@
 
 -(void)drawRect:(CGRect)rect{
     const CGFloat *color=CGColorGetComponents(popUpColor.CGColor);
-    
+
     UIGraphicsBeginImageContext(CGSizeMake(30, 20));
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     CGContextSetRGBFillColor(ctx, color[0], color[1], color[2], 1);
     CGContextSetShadowWithColor(ctx, CGSizeMake(0, 0), 7.0, [UIColor blackColor].CGColor);
-	CGPoint points[3] = { CGPointMake(15, 5), CGPointMake(25, 25),
-		CGPointMake(5,25)};
+    CGPoint points[3] = { CGPointMake(15, 5), CGPointMake(25, 25),
+        CGPointMake(5,25)};
     CGContextAddLines(ctx, points, 3);
     CGContextClosePath(ctx);
     CGContextFillPath(ctx);
     UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    
+
     CGRect imgframe=CGRectMake((showOnRect.origin.x+((showOnRect.size.width-30)/2)), ((showOnRect.size.height/2)+showOnRect.origin.y), 30, 13);
-    
+
     UIImageView *img=[[UIImageView alloc] initWithImage:viewImage highlightedImage:nil];
     [self addSubview:img];
     img.translatesAutoresizingMaskIntoConstraints=NO;
     NSDictionary *dict=NSDictionaryOfVariableBindings(img);
     [img.superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|-%f-[img(%f)]",imgframe.origin.x,imgframe.size.width] options:NSLayoutFormatDirectionLeadingToTrailing  metrics:nil views:dict]];
     [img.superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[img(%f)]",imgframe.origin.y,imgframe.size.height] options:NSLayoutFormatDirectionLeadingToTrailing  metrics:nil views:dict]];
-    
+
     UIFont *font=[UIFont fontWithName:FontName size:FontSize];
     CGSize size=[self.strMsg boundingRectWithSize:CGSizeMake(fieldFrame.size.width-(PaddingInErrorPopUp*2), 1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:font} context:nil].size;
     size=CGSizeMake(ceilf(size.width), ceilf(size.height));
-    
+
     UIView *view=[[UIView alloc] initWithFrame:CGRectZero];
     [self insertSubview:view belowSubview:img];
     view.backgroundColor=self.popUpColor;
@@ -69,7 +69,7 @@
     lbl.text=self.strMsg;
     lbl.textColor=ColorFont;
     [view addSubview:lbl];
-    
+
     lbl.translatesAutoresizingMaskIntoConstraints=NO;
     dict=NSDictionaryOfVariableBindings(lbl);
     [lbl.superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"H:|-%f-[lbl(%f)]",(float)PaddingInErrorPopUp,size.width] options:NSLayoutFormatDirectionLeadingToTrailing  metrics:nil views:dict]];
@@ -164,13 +164,13 @@
 @end
 
 @implementation TextFieldValidator
-@synthesize presentInView,validateOnCharacterChanged,popUpColor,isMandatory,validateOnResign;
+@synthesize validateOnCharacterChanged,popUpColor,isMandatory,validateOnResign;
 
 #pragma mark - Default Methods of UIView
 - (id)initWithFrame:(CGRect)frame{
     self = [super initWithFrame:frame];
     if (self) {
-        
+
     }
     return self;
 }
@@ -181,6 +181,7 @@
     validateOnCharacterChanged=YES;
     isMandatory=YES;
     validateOnResign=YES;
+    _trimBeforeValidate = YES;
     popUpColor=ColorPopUpBg;
     strLengthValidationMsg=[MsgValidateLength copy];
     supportObj=[[TextFieldValidatorSupport alloc] init];
@@ -206,6 +207,14 @@
     validateOnResign=validate;
 }
 
+- (UIView *)presentInView
+{
+    if (_presentInView == nil) {
+        _presentInView = [self superview];
+    }
+    return _presentInView;
+}
+
 #pragma mark - Public methods
 -(void)addRegx:(NSString *)strRegx withMsg:(NSString *)msg{
     NSDictionary *dic=[[NSDictionary alloc] initWithObjectsAndKeys:strRegx,@"regx",msg,@"msg", nil];
@@ -222,27 +231,12 @@
 }
 
 -(BOOL)validate{
-    if(isMandatory){
-        if([self.text length]==0){
-            [self showErrorIconForMsg:strLengthValidationMsg];
-            return NO;
-        }
-    }
-    for (int i=0; i<[arrRegx count]; i++) {
-        NSDictionary *dic=[arrRegx objectAtIndex:i];
-        if([dic objectForKey:@"confirm"]){
-            TextFieldValidator *txtConfirm=[dic objectForKey:@"confirm"];
-            if(![txtConfirm.text isEqualToString:self.text]){
-                [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
-                return NO;
-            }
-        }else if(![[dic objectForKey:@"regx"] isEqualToString:@""] && [self.text length]!=0 && ![self validateString:self.text withRegex:[dic objectForKey:@"regx"]]){
-            [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
-            return NO;
-        }
-    }
-    self.rightView=nil;
-    return YES;
+    return [self validateShowingErrorMessage:YES];
+}
+
+- (BOOL)isValid
+{
+    return [self validateShowingErrorMessage:NO];
 }
 
 -(void)dismissPopup{
@@ -264,6 +258,42 @@
     return [regex evaluateWithObject:stringToSearch];
 }
 
+- (BOOL)validateShowingErrorMessage:(BOOL)showErrorMessage
+{
+    if (self.trimBeforeValidate) {
+        self.text = [self.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    }
+    if(isMandatory){
+        if([self.text length]==0){
+            if (showErrorMessage) {
+                [self showErrorIconForMsg:strLengthValidationMsg];
+            }
+            return NO;
+        }
+    }
+    for (int i=0; i<[arrRegx count]; i++) {
+        NSDictionary *dic=[arrRegx objectAtIndex:i];
+        if([dic objectForKey:@"confirm"]){
+            TextFieldValidator *txtConfirm=[dic objectForKey:@"confirm"];
+            if(![txtConfirm.text isEqualToString:self.text]){
+                if (showErrorMessage) {
+                    [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
+                }
+                return NO;
+            }
+        }else if(![[dic objectForKey:@"regx"] isEqualToString:@""] && [self.text length]!=0 && ![self validateString:self.text withRegex:[dic objectForKey:@"regx"]]){
+            if (showErrorMessage) {
+                [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
+            }
+            return NO;
+        }
+    }
+    if (showErrorMessage) {
+        self.rightView=nil;
+    }
+    return YES;
+}
+
 -(void)showErrorIconForMsg:(NSString *)msg{
     UIButton *btnError=[[UIButton alloc] initWithFrame:CGRectMake(0, 0, 25, 25)];
     [btnError addTarget:self action:@selector(tapOnError) forControlEvents:UIControlEventTouchUpInside];
@@ -277,11 +307,11 @@
     popUp=[[IQPopUp alloc] initWithFrame:CGRectZero];
     popUp.strMsg=msg;
     popUp.popUpColor=popUpColor;
-    popUp.showOnRect=[self convertRect:self.rightView.frame toView:presentInView];
-    popUp.fieldFrame=[self.superview convertRect:self.frame toView:presentInView];
+    popUp.showOnRect=[self convertRect:self.rightView.frame toView:self.presentInView];
+    popUp.fieldFrame=[self.superview convertRect:self.frame toView:self.presentInView];
     popUp.backgroundColor=[UIColor clearColor];
-    [presentInView addSubview:popUp];
-    
+    [self.presentInView addSubview:popUp];
+
     popUp.translatesAutoresizingMaskIntoConstraints=NO;
     NSDictionary *dict=NSDictionaryOfVariableBindings(popUp);
     [popUp.superview addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[popUp]-0-|" options:NSLayoutFormatDirectionLeadingToTrailing  metrics:nil views:dict]];
