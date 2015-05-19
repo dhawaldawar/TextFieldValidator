@@ -80,6 +80,25 @@ NS_CLASS_AVAILABLE_IOS(6_0) @interface TextFieldValidator : UITextField<UITextFi
  */
 -(void)addConfirmValidationTo:(TextFieldValidator *)txtPassword withMsg:(NSString *)msg;
 
+/*
+  Use to add custom validation to the field. 
+ @param selectorName the name of the selector to activate on the object
+ @param object the object on which to call the selector
+ 
+ example:
+ - (void)viewDidLoad {
+ [super viewDidLoad];
+ [self.courierEmail addCustomValidation:@"test:" object:self withMsg:@"test"];
+  }
+
+  - (BOOL) test:(NSString*)textField
+  {
+      return NO;
+  }
+
+ */
+-(void)addCustomValidation:(NSString*)selectorName object:(id)object withMsg:(NSString *)msg;
+
 /**
     Use to perform validation
     @return Bool It will return YES if all provided regex validation will pass else return NO

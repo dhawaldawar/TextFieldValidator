@@ -8,6 +8,36 @@
 
 #import "TextFieldValidator.h"
 
+
+@interface WeakRef : NSProxy
+
+@property (weak) id ref;
+- (id)initWithObject:(id)object;
+
+@end
+
+
+// WeakRef.m
+@implementation WeakRef
+
+- (id)initWithObject:(id)object
+{
+    self.ref = object;
+    return self;
+}
+
+- (void)forwardInvocation:(NSInvocation *)invocation
+{
+    invocation.target = self.ref;
+    [invocation invoke];
+}
+
+- (NSMethodSignature *)methodSignatureForSelector:(SEL)sel
+{
+    return [self.ref methodSignatureForSelector:sel];
+}
+
+@end
 @interface IQPopUp : UIView
 
 @property (nonatomic,assign) CGRect showOnRect;
@@ -221,6 +251,13 @@
     [arrRegx addObject:dic];
 }
 
+-(void)addCustomValidation:(NSString*)selectorName object:(id)object withMsg:(NSString *)msg{
+    WeakRef *objectRef = [[WeakRef alloc] initWithObject:object];
+    NSDictionary *dic=[[NSDictionary alloc] initWithObjectsAndKeys:selectorName, @"custom",msg,@"msg", objectRef ,@"object", nil];
+    [arrRegx addObject:dic];
+}
+
+
 -(BOOL)validate{
     if(isMandatory){
         if([self.text length]==0){
@@ -236,7 +273,25 @@
                 [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
                 return NO;
             }
-        }else if(![[dic objectForKey:@"regx"] isEqualToString:@""] && [self.text length]!=0 && ![self validateString:self.text withRegex:[dic objectForKey:@"regx"]]){
+        }
+        
+        else if([dic objectForKey:@"custom"])
+        {
+            WeakRef *objWeak = [dic objectForKey:@"object"];
+            NSString *selectorName = (NSString*)[dic objectForKey:@"custom"];
+            const char *str = [selectorName UTF8String];
+            SEL selector = sel_registerName(str);  
+            if ((objWeak) &&
+                ([objWeak respondsToSelector:selector])&&
+                (![objWeak performSelector:selector withObject:self.text]))
+            {
+                [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
+                return NO;
+            }
+
+        }
+        
+        else if(![[dic objectForKey:@"regx"] isEqualToString:@""] && [self.text length]!=0 && ![self validateString:self.text withRegex:[dic objectForKey:@"regx"]]){
             [self showErrorIconForMsg:[dic objectForKey:@"msg"]];
             return NO;
         }
