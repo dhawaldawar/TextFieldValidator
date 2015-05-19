@@ -279,8 +279,8 @@
         {
             WeakRef *objWeak = [dic objectForKey:@"object"];
             NSString *selectorName = (NSString*)[dic objectForKey:@"custom"];
-            SEL selector = sel_registerName([[selectorName dataUsingEncoding:NSUTF8StringEncoding] bytes]);
-            
+            const char *str = [selectorName UTF8String];
+            SEL selector = sel_registerName(str);  
             if ((objWeak) &&
                 ([objWeak respondsToSelector:selector])&&
                 (![objWeak performSelector:selector withObject:self.text]))
