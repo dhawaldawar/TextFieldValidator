@@ -85,7 +85,7 @@
 
 @interface TextFieldValidatorSupport : NSObject<UITextFieldDelegate>
 
-@property (nonatomic,retain) id<UITextFieldDelegate> delegate;
+@property (nonatomic,weak) id<UITextFieldDelegate> delegate;
 @property (nonatomic,assign) BOOL validateOnCharacterChanged;
 @property (nonatomic,assign) BOOL validateOnResign;
 @property (nonatomic,unsafe_unretained) IQPopUp *popUp;
